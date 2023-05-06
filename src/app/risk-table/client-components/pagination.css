@@ -1,0 +1,24 @@
+.pagination-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+}
+
+.page-button {
+  padding: 2px;
+  margin-inline: 2px;
+  border: solid 1px gray;
+  background-color: rgb(195, 195, 195);
+  border-radius: 5px;
+}
+
+.page-number-button {
+  padding: 2px;
+  margin-inline: 2px;
+}
+
+.selectedPage {
+  color: rgb(58, 58, 255);
+  border-bottom: solid 1px rgb(58, 58, 255);
+  /* font-weight: bold; */
+}
