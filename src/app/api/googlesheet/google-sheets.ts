@@ -4,13 +4,6 @@ import { Options, getExtractedOptions } from "./utils/getExtractedOptions";
 
 const { google } = require('googleapis');
 
-// Make functions in this file reusable
-
-const auth = new google.auth.GoogleAuth({
-  keyFile: './src/app/api/googlesheet/key.json',
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
-
 const client = new google.auth.JWT(
   process.env.GOOGLE_CLIENT_EMAIL,
   null,
@@ -18,7 +11,7 @@ const client = new google.auth.JWT(
   ['https://www.googleapis.com/auth/spreadsheets']
 );
 
-const sheets = google.sheets({ version: 'v4', auth });
+const sheets = google.sheets({ version: 'v4', auth: client });
 const tableName = 'sample_data';
 const sheetId = '1Y_yiT-_7IimioBvcqiCPwLzTLazfdRyzZ4k3cpQXiAw';
 
