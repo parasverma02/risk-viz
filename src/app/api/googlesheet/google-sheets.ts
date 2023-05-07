@@ -5,9 +5,9 @@ import { Options, getExtractedOptions } from "./utils/getExtractedOptions";
 const { google } = require('googleapis');
 
 const client = new google.auth.JWT(
-  process.env.GOOGLE_CLIENT_EMAIL,
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_EMAIL,
   null,
-  process.env.GOOGLE_CLIENT_PRIVATE_KEY,
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_PRIVATE_KEY,
   ['https://www.googleapis.com/auth/spreadsheets']
 );
 
