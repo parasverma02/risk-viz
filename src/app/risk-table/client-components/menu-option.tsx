@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 // project imports
 import Filter from "./filter";
 import Sort from "./sort";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useDispatch } from "react-redux";
+import { updateBusinessCategoryFilter, updateRiskFactorFilter } from "@/app/store/reducers/riskSlice";
 
 type MenuOptionsProps = {
   filterOptions: { businessCategories?: string[], riskFactors?: string[]},
@@ -13,35 +17,40 @@ type MenuOptionsProps = {
 
 const MenuOptions =  (props: MenuOptionsProps) => {
 
-  const [businessfilterRoute, setbusinessFilterRoute] = useState<string>('');
-  const [riskfilterRoute, setRiskFilterRoute] = useState<string>('');
+  // const [businessfilterRoute, setbusinessFilterRoute] = useState<string>('');
+  // const [riskfilterRoute, setRiskFilterRoute] = useState<string>('');
 
   const [sortRoute, setSortRoute] = useState<string>('');
   const router = useRouter();
   const { businessCategories, riskFactors } = props.filterOptions;
+  const state = useSelector((state: RootState) => state.risk);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    let route = '/risk-table';
+    let route = '/risk-table/' + state.year;
     if (sortRoute != '') {
       route += '/sortby' + sortRoute
     }
-    if (businessfilterRoute != '') {
-      route += '/filterbyBC' + businessfilterRoute
+    if (state.businessCategoryFilter != '') {
+      route += '/filterbyBC' + state.businessCategoryFilter
     }
-    if (riskfilterRoute != '') {
-      route += '/filterbyRF' + riskfilterRoute
+    if (state.riskFactorFilter != '') {
+      route += '/filterbyRF' + state.riskFactorFilter
     }
 
     router.push(route);
 
-  }, [businessfilterRoute, riskfilterRoute, router, sortRoute])
+  }, [router, sortRoute, state.businessCategoryFilter, state.riskFactorFilter, state.year])
 
   const handleRiskFilterRouteChange = (route: string) => {
-    setRiskFilterRoute(route);
+    dispatch(updateBusinessCategoryFilter(route));
+    // setRiskFilterRoute(route);
 
   }
   const handleBusinessFilterRouteChange = (route: string) => {
-    setbusinessFilterRoute(route);
+    dispatch(updateRiskFactorFilter(route));
+
+    // setbusinessFilterRoute(route);
   }
 
   const handleSortRouteChange = (route: string) => {

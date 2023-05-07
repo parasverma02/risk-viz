@@ -5,6 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import React from "react";
 
 import './pagination.css';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { updatePage } from "@/app/store/reducers/riskSlice";
 
 type PaginationProps = {
   rowsPerPage: number,
@@ -27,42 +30,49 @@ const Pagination = (props: PaginationProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const page = useSelector((state: RootState) => state.risk.page)
+  const dispatch = useDispatch();
   const totalPages: number = useMemo(() => {
     return Math.ceil(props.totalRowsCount / props.rowsPerPage);
   }, [props.rowsPerPage, props.totalRowsCount]);
 
   useEffect(() => {
-    const route = '/page_' + currentPage;
+    debugger;
+    const route = '/page_' + page;
     router.push(pathname + route);
-  }, [currentPage, pathname, router])
+  }, [page])
 
   const pageArray = useMemo(() => {
     return createArrayFromNum(totalPages)
   }, [totalPages]);
 
   const handlePageClick = (pageNo: number) => {
-    setCurrentPage(pageNo);
+    dispatch(updatePage(pageNo));
   }
   const handleNextClick = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    dispatch(updatePage(page + 1));
+
+    // setCurrentPage((prevPage) => prevPage + 1);
   }
   const handlePrevClick = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
+    dispatch(updatePage(page - 1));
+
+    // setCurrentPage((prevPage) => prevPage - 1);
   }
 
   const isPrevDisabled = useMemo(() => {
-    return currentPage == 1
-  }, [currentPage])
+    return page == 1
+  }, [page])
 
   const isNextDisabled = useMemo(() => {
-    return currentPage == totalPages;
-  }, [currentPage, totalPages])
+    return page == totalPages;
+  }, [page, totalPages])
 
   return (
     <div className="pagination-container">
       <button className={"page-button"} disabled={isPrevDisabled} onClick={handlePrevClick}>Prev</button>
-      {pageArray.map((page: number) => (
-        <button className={`page-number-button ${page == currentPage && 'selectedPage'}`} key={page} onClick={() => handlePageClick(page)}>{page}</button>
+      {pageArray.map((pageNo: number) => (
+        <button className={`page-number-button ${pageNo == page && 'selectedPage'}`} key={pageNo} onClick={() => handlePageClick(pageNo)}>{pageNo}</button>
       ))
       }
       <button className={"page-button "} disabled={isNextDisabled} onClick={handleNextClick}>Next</button>
