@@ -5,6 +5,10 @@ import { RiskData } from '../../../types/types';
 import { getRiskData } from '../../api/googlesheet/google-sheets';
 import GoogleMapCustom from '../client-components/google-map-custom';
 import { DEFAULT_MAP_ZOOM } from '@/constants';
+import store from '@/app/store/store';
+import { updateYear } from '@/app/store/reducers/riskSlice';
+// import store from '@/app/store/store';
+// import { updateYear } from '@/app/store/reducers/riskSlice';
 
 type RiskMap = {
   params : {
@@ -19,7 +23,11 @@ const getData = async (year: string) => {
 
 const RiskMap = async (props: RiskMap) => {
   let data: RiskData[] | undefined;
+  // const state = store.getState().risk;
+  const dispatch = store.dispatch;
+  
   if (props.params.year != null) {
+    // dispatch(updateYear(Number(props.params.year)));
     data = await getData(props.params.year);
   } else {
     data = await getData('2050');

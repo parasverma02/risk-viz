@@ -14,8 +14,8 @@ export type DataTableProps = {
 const DataTable = (props: DataTableProps) => {
  
   const { heading, dataRows } = props;
-  const handlePageChange = useCallback((currentPage: number) =>  {
-  }, [])
+  // const handlePageChange = useCallback((currentPage: number) =>  {
+  // }, [])
 
   return(
     <div className={"data-table-container"}>

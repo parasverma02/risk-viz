@@ -12,13 +12,40 @@ const client = new google.auth.JWT(
 );
 
 const sheets = google.sheets({ version: 'v4', auth: client });
-const tableName = 'sample_data';
-const sheetId = '1Y_yiT-_7IimioBvcqiCPwLzTLazfdRyzZ4k3cpQXiAw';
+const sourceTitle = 'sample_data';
+const sourceSheetId = '1Y_yiT-_7IimioBvcqiCPwLzTLazfdRyzZ4k3cpQXiAw';
+
+
+// const createGoogleSheetFromSource = async () => {
+//   const newSheetTitle = "risk_data";
+//   const newSpreadsheet = await sheets.spreadsheets.create({
+//     resource: {
+//       properties: {
+//         title: newSheetTitle,
+//       },
+//     },
+//   });
+//   const newSpreadsheetId = newSpreadsheet.data.spreadsheetId;
+//   const range = "A:G";
+//   const sourceData = await getData(sourceSheetId, sourceTitle, range);
+//   const valueInputOption = 'USER_ENTERED';
+//   await sheets.spreadsheets.values.update({
+//     spreadsheetId: newSpreadsheetId,
+//     range: range,
+//     valueInputOption,
+//     requestBody: {
+//       values: sourceData,
+//     }
+//   })
+//   console.log(newSpreadsheetId)
+//   const dataFromNewSheet = await getData(newSpreadsheetId, newSheetTitle, range);
+//   console.log(dataFromNewSheet)
+// }
 
 const getYearsList = async () => {
   try {
     const dataRange = 'G:G'
-    const data: string[] = await getData(sheetId, tableName, dataRange);
+    const data: string[] = await getData(sourceSheetId, sourceTitle, dataRange);
     data.shift();
     const dataFlat = data.flat();
     const yearsSet = new Set(dataFlat);
@@ -33,7 +60,7 @@ const getYearsList = async () => {
 const getRiskFactorList = async () => {
   try {
     const dataRange = 'F:F';
-    const data = await getData(sheetId, tableName, dataRange);
+    const data = await getData(sourceSheetId, sourceTitle, dataRange);
     data.shift();
     const dataFlat = data.flat();
     const riskFactorSet = new Set<string>();
@@ -53,7 +80,7 @@ const getRiskFactorList = async () => {
 const getBusinessCategoryList = async () => {
   try {
     const dataRange = 'D:D';
-    const data: string[] = await getData(sheetId, tableName, dataRange);
+    const data: string[] = await getData(sourceSheetId, sourceTitle, dataRange);
     data.shift();
     const dataFlat = data.flat();
     const bCtgSet = new Set(dataFlat);
@@ -67,7 +94,7 @@ const getBusinessCategoryList = async () => {
 const getDataFromSpreadSheet = async (range?: string) => {
   try {
     const dataRange = range? range: 'A:G'
-    const data = await getData(sheetId, tableName, dataRange);
+    const data = await getData(sourceSheetId, sourceTitle, dataRange);
 
     // const headers = rows.unshift();
     const riskData: RiskData[] = data.map((row: string[]) => {
@@ -143,14 +170,14 @@ const getRiskData = async (selectedYear: string, options?: string[]) => {
       const { currentPage } = filter_sort_options; 
       const data = await getFullRiskData(selectedYear, filter_sort_options);
       console.log('currnetPage:' + currentPage);
-      let startRow = 1;
-      let endRow = ROWS_PER_PAGE;
-      if (currentPage) {
-         startRow = (currentPage - 1) * ROWS_PER_PAGE + 1;
-         endRow = currentPage * ROWS_PER_PAGE;
-      }
-      const pageData = data?.slice(startRow, endRow + 1);
-      return pageData;
+      // let startRow = 1;
+      // let endRow = ROWS_PER_PAGE;
+      // if (currentPage) {
+      //    startRow = (currentPage - 1) * ROWS_PER_PAGE + 1;
+      //    endRow = currentPage * ROWS_PER_PAGE;
+      // }
+      // const pageData = data?.slice(startRow, endRow + 1);
+      return data;
     }
   } catch (error) {
     console.log("Error retrieveing data");
